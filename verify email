@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore')
 # WARNING: Active IMAP and less secure app before on every email you want to use with this script
 # Note: The script can only be used with gmail, outlook and yahoo
 
-def send_mail():
+def verify_email():
 
     try:
         with open('', 'r') as csv_file: #put the path of "verify email.csv" file that you can download in the project (ex of a path: "../email/verify email.csv")
@@ -89,7 +89,7 @@ def send_mail():
 k = "yes"
 s = 2
 while True:
-    with open('', 'r') as csv_file: #put the path of "send email.csv" file that you can download in the project
+    with open('', 'r') as csv_file: #put the path of "verify email.csv" file that you can download in the project
         csv_reader = reader(csv_file)
         list_of_rows = list(csv_reader)
         # (list_of_rows)
@@ -108,5 +108,5 @@ while True:
 
 
         else:
-            send_mail()
+            verify_email()
             s += 1
