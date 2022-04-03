@@ -15,7 +15,7 @@ warnings.filterwarnings('ignore')
 def send_mail():
 
     try:
-        with open('', 'r') as csv_file: #put the path of "send mail.csv" file that you can download in the project (ex of a path: "../email/send mail.csv")
+        with open('', 'r') as csv_file: #put the path of "verify email.csv" file that you can download in the project (ex of a path: "../email/verify email.csv")
             csv_reader = reader(csv_file)
             list_of_rows = list(csv_reader)
 
@@ -81,7 +81,7 @@ def send_mail():
             sleep(v)
             print("sleep during " + str(v) + "seconde")
     except Exception as e:
-        print(Fore.RED + "Ohoh! Something went wrong!")
+        print(Fore.RED + "Ohoh! Something went wrong! This email doesn't work:"+str(email_name))
         print(e)
 
 
@@ -89,7 +89,7 @@ def send_mail():
 k = "yes"
 s = 2
 while True:
-    with open('', 'r') as csv_file: #put the path of "send mail.csv" file that you can download in the project
+    with open('', 'r') as csv_file: #put the path of "send email.csv" file that you can download in the project
         csv_reader = reader(csv_file)
         list_of_rows = list(csv_reader)
         # (list_of_rows)
