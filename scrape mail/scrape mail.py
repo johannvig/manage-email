@@ -1,5 +1,7 @@
 import imaplib
 import email
+import smtplib
+import time
 from colorama import Fore
 from csv import reader
 from discord_webhook import DiscordWebhook, DiscordEmbed
@@ -9,43 +11,43 @@ warnings.filterwarnings('ignore')
 
 
 # WARNING: Active IMAP and less secure app before on every email you want to use with this script
-# Note: The script can only be used with gmail, outlook and yahoo
+# Note: The script can only be used with Gmail, Outlook, and Yahoo
 
-def scrape_mail():
+def scrape_mail(row_number, file_path):
     try:
-        with open('','r') as csv_file:  # put the path of "scrape mail.csv" file that you can download in the project (ex of a path: "../email/scrape mail.csv")
+        with open(file_path, 'r') as csv_file:  # path of "scrape mail.csv" file
             csv_reader = reader(csv_file)
             list_of_rows = list(csv_reader)
 
-            row_number = s
             col_number = 1
             USERNAME = list_of_rows[row_number - 1][col_number - 1]
 
             # filter according to the type of email and uses the IMAP protocol associated with the type of email
-
-
             gmail = ["@gmail.com"]
             outlook = ["@outlook.com"]
             yahoo = ["@yahoo.com"]
 
+            IMAP_HOST = None
+            smtpserver = None
+
             for imail in outlook:
-                if imail in email_name:
+                if imail in USERNAME:
                     IMAP_HOST = 'imap-mail.outlook.com'
-                    smtpserver = smtplib.SMTP("smtp-mail.outlook.com", 587)
+                    smtpserver = "smtp-mail.outlook.com"
 
             for imail in yahoo:
-                if imail in email_name:
+                if imail in USERNAME:
                     IMAP_HOST = 'imap.mail.yahoo.com'
-                    smtpserver = smtplib.SMTP("smtp.mail.yahoo.com", 587)
+                    smtpserver = "smtp.mail.yahoo.com"
 
             for imail in gmail:
-                if imail in email_name:
+                if imail in USERNAME:
                     IMAP_HOST = 'imap.gmail.com'
-                    smtpserver = smtplib.SMTP("smtp.gmail.com", 587)
+                    smtpserver = "smtp.gmail.com"
 
-
-            # If you want to use this tool with another email box provider, you have to search the IMAP and SMTP protocol of this email box provider and replace "imap.gmail.com" by the new one
-
+            if IMAP_HOST is None or smtpserver is None:
+                print(Fore.RED + "No suitable mail server found for the email: " + USERNAME)
+                return
 
             col_number = 2
             PASSWORD = list_of_rows[row_number - 1][col_number - 1]
@@ -53,10 +55,7 @@ def scrape_mail():
             col_number = 3
             TO_ADDRESS = list_of_rows[row_number - 1][col_number - 1]
 
-       
-
             SEARCH_CRITERIA = "UNSEEN"
-
             FROM_ADDRESS = USERNAME
 
             FORWARD_TIME_DELAY = 5
@@ -102,7 +101,7 @@ def scrape_mail():
 
                         try:
                             # Open SMTP connection
-                            smtp_client = smtplib.SMTP(smtpserver)
+                            smtp_client = smtplib.SMTP(smtpserver, 587)
                             smtp_client.starttls()
                             smtp_client.ehlo()
                             smtp_client.login(USERNAME, PASSWORD)
@@ -150,31 +149,31 @@ def scrape_mail():
             imap_client.logout()
 
     except Exception as e:
-        print(Fore.RED + "Ohoh! Something went wrong! This email doesn't work:" + str(email_name))
+        print(Fore.RED + "Ohoh! Something went wrong! This email doesn't work:" + str(USERNAME))
         print(e)
 
 
-k = "yes"
-s = 2
-while True:
-    with open('', 'r') as csv_file: #put the path of "scrape mail.csv" file that you can download in the project
-        csv_reader = reader(csv_file)
-        list_of_rows = list(csv_reader)
-        # (list_of_rows)
+if __name__ == "__main__":
+    file_path = ''  # put the path of "scrape mail.csv" file
 
-        try:
-            row_number = s
-            col_number = 1
-            value = list_of_rows[row_number - 1][col_number - 1]
-        except:
-            k = "no"
+    k = "yes"
+    s = 2
+    while True:
+        with open(file_path, 'r') as csv_file:  # path of "scrape mail.csv" file
+            csv_reader = reader(csv_file)
+            list_of_rows = list(csv_reader)
 
-        if k == "no":
-            print(Fore.GREEN + "program is over")
-            print(Fore.GREEN + "Job done. Enjoy your day!")
-            break
+            try:
+                row_number = s
+                col_number = 1
+                value = list_of_rows[row_number - 1][col_number - 1]
+            except IndexError:
+                k = "no"
 
-
-        else:
-            scrape_mail()
-            s += 1
+            if k == "no":
+                print(Fore.GREEN + "Program is over")
+                print(Fore.GREEN + "Job done. Enjoy your day!")
+                break
+            else:
+                scrape_mail(row_number, file_path)
+                s += 1
