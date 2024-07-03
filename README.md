@@ -50,9 +50,9 @@ Before using this tool, ensure you have:
 
 
 
-## Avertissements
+## Warnings
 
-Le script ne fonctionne qu'avec les fournisseurs de messagerie Gmail, Outlook et Yahoo.
-Avant d'utiliser le script, vous devez activer l'IMAP et les applications moins sécurisées pour chaque e-mail que vous souhaitez utiliser avec cet outil.
-Si vous souhaitez utiliser cet outil avec un autre fournisseur de boîte e-mail, vous devez rechercher le protocole IMAP et SMTP de ce fournisseur de boîte e-mail et remplacer "imap.gmail.com" par le nouveau.
+The script only works with Gmail, Outlook, and Yahoo email providers.
+Before using the script, you need to enable IMAP and less secure apps for each email you want to use with this tool.
+If you want to use this tool with another email provider, you must find the IMAP and SMTP protocol of that email provider and replace "imap.gmail.com" with the new one.
 
