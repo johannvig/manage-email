@@ -9,24 +9,23 @@ warnings.filterwarnings('ignore')
 
 
 # WARNING: Active IMAP and less secure app before on every email you want to use with this script
-# Note: The script can only be used with gmail, outlook and yahoo
+# Note: The script can only be used with Gmail, Outlook, and Yahoo
 
-def read_mail():
+def read_mail(row_number, file_path, webhook_url, discord_bot_name, discord_bot_icon):
     try:
-        with open('','r') as csv_file:  # put the path of "read mail.csv" file that you can download in the project (ex of a path: "../email/read mail.csv")
+        with open(file_path, 'r') as csv_file:  # path of "read mail.csv" file
             csv_reader = reader(csv_file)
             list_of_rows = list(csv_reader)
 
-            row_number = s
             col_number = 1
             email_name = list_of_rows[row_number - 1][col_number - 1]
 
             # filter according to the type of email and uses the IMAP protocol associated with the type of email
-
-
             gmail = ["@gmail.com"]
             outlook = ["@outlook.com"]
             yahoo = ["@yahoo.com"]
+
+            host = None
 
             for imail in outlook:
                 if imail in email_name:
@@ -40,16 +39,15 @@ def read_mail():
                 if imail in email_name:
                     host = 'imap.gmail.com'
 
-
-            # If you want to use this tool with another email box provider, you have to search the IMAP protocol of this email box provider and replace "imap.gmail.com" by the new one
+            if host is None:
+                print(Fore.RED + "No suitable mail server found for the email: " + email_name)
+                return
 
             col_number = 2
             email_password = list_of_rows[row_number - 1][col_number - 1]
 
             col_number = 3
             email_sender = list_of_rows[row_number - 1][col_number - 1]
-
-
 
             # set connection
             mail = imaplib.IMAP4_SSL(host)
@@ -61,13 +59,13 @@ def read_mail():
             mail.select("INBOX")
 
             # select specific mails
-            _, selected_mails = mail.search(None, '(FROM "'+email_sender+'")')
+            _, selected_mails = mail.search(None, '(FROM "' + email_sender + '")')
 
             # total number of mails from specific user
-            print("Total Messages from "+email_sender+":", len(selected_mails[0].split()))
+            print("Total Messages from " + email_sender + ":", len(selected_mails[0].split()))
 
             for num in selected_mails[0].split():
-                #take the text from the message
+                # take the text from the message
                 _, data = mail.fetch(num, '(RFC822)')
                 _, bytes_data = data[0]
 
@@ -86,22 +84,20 @@ def read_mail():
                         print("Message: \n", message.decode())
                         print("==========================================\n")
 
-
                         # Track all mail that you sent with a discord webhook
-
-                        webhook = DiscordWebhook(url="")  # put your discord webhook url
-                        embed = DiscordEmbed(title="task sucess", color=3066993)
+                        webhook = DiscordWebhook(url=webhook_url)  # put your discord webhook url
+                        embed = DiscordEmbed(title="Task Success", color=3066993)
                         embed.set_author(
-                            name="",  # put the name of your discord bot
-                            icon_url="",  # put the profil image of your discord bot
+                            name=discord_bot_name,  # put the name of your discord bot
+                            icon_url=discord_bot_icon,  # put the profile image of your discord bot
                         )
                         embed.add_embed_field(name='Subject', value=email_message["subject"], inline=False)
                         embed.add_embed_field(name='To', value=email_message["to"], inline=False)
                         embed.add_embed_field(name='From', value=email_message["from"], inline=False)
                         embed.add_embed_field(name='Date', value=email_message["date"], inline=False)
                         embed.add_embed_field(name='Message', value=message.decode(), inline=False)
-                        embed.add_embed_field(name='email', value=email_name, inline=False)
-                        embed.add_embed_field(name='Line of the csv', value=s, inline=False)
+                        embed.add_embed_field(name='Email', value=email_name, inline=False)
+                        embed.add_embed_field(name='Line of the CSV', value=row_number, inline=False)
                         embed.add_embed_field(name='Tool', value="Read mail", inline=False)
                         webhook.add_embed(embed)
                         embed.set_timestamp()
@@ -114,27 +110,30 @@ def read_mail():
         print(e)
 
 
-k = "yes"
-s = 2
-while True:
-    with open('', 'r') as csv_file: #put the path of "read mail.csv" file that you can download in the project
-        csv_reader = reader(csv_file)
-        list_of_rows = list(csv_reader)
-        # (list_of_rows)
+if __name__ == "__main__":
+    file_path = ''  # put the path of "read mail.csv" file
+    webhook_url = ''  # put your discord webhook url
+    discord_bot_name = ''  # put the name of your discord bot
+    discord_bot_icon = ''  # put the profile image url of your discord bot
 
-        try:
-            row_number = s
-            col_number = 1
-            value = list_of_rows[row_number - 1][col_number - 1]
-        except:
-            k = "no"
+    k = "yes"
+    s = 2
+    while True:
+        with open(file_path, 'r') as csv_file:  # path of "read mail.csv" file
+            csv_reader = reader(csv_file)
+            list_of_rows = list(csv_reader)
 
-        if k == "no":
-            print(Fore.GREEN + "program is over")
-            print(Fore.GREEN + "Job done. Enjoy your day!")
-            break
+            try:
+                row_number = s
+                col_number = 1
+                value = list_of_rows[row_number - 1][col_number - 1]
+            except IndexError:
+                k = "no"
 
-
-        else:
-            read_mail()
-            s += 1
+            if k == "no":
+                print(Fore.GREEN + "Program is over")
+                print(Fore.GREEN + "Job done. Enjoy your day!")
+                break
+            else:
+                read_mail(row_number, file_path, webhook_url, discord_bot_name, discord_bot_icon)
+                s += 1
