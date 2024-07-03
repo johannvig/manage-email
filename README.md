@@ -26,10 +26,19 @@ Before using this tool, ensure you have:
 - VERBOSE: un booléen qui indique si vous souhaitez afficher des informations détaillées sur le transfert des e-mails.
 
 ![image](https://github.com/johannvig/manage-email/assets/102874093/7d1a69ff-8bdd-4693-b217-009a1cd45c97)
+<p align="center">
+  <em>Picture 1: Homepage</em>
+</p>
 
 ![image](https://github.com/johannvig/manage-email/assets/102874093/97188aa8-8d57-41f5-ae26-5ca14ab30ad6)
+<p align="center">
+  <em>Picture 2: Enter an option</em>
+</p>
 
 ![image](https://github.com/johannvig/manage-email/assets/102874093/a49bde4f-72fa-41f7-a08b-c57d995c09c6)
+<p align="center">
+  <em>Picture 3: Enter an invalid option</em>
+</p>
 
 
 
